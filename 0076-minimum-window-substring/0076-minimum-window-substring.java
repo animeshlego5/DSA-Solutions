@@ -1,46 +1,36 @@
 class Solution {
-    public String minWindow(String s, String t) {
-        if (s.length() < t.length()) {
-            return "";
-        }
-
-        Map<Character, Integer> charCount = new HashMap<>();
-        for (char ch : t.toCharArray()) {
-            charCount.put(ch, charCount.getOrDefault(ch, 0) + 1);
-        }
-
-        int targetCharsRemaining = t.length();
-        int[] minWindow = {0, Integer.MAX_VALUE};
-        int startIndex = 0;
-
-        for (int endIndex = 0; endIndex < s.length(); endIndex++) {
-            char ch = s.charAt(endIndex);
-            if (charCount.containsKey(ch) && charCount.get(ch) > 0) {
-                targetCharsRemaining--;
+    public String minWindow(String str, String T) {
+        int count = 0;
+        int[] dict = new int[128];
+        for (char c : T.toCharArray()) {
+            if (dict[c] == 0) {
+                count++;
             }
-            charCount.put(ch, charCount.getOrDefault(ch, 0) - 1);
+            dict[c]++;
+        }
 
-            if (targetCharsRemaining == 0) {
-                while (true) {
-                    char charAtStart = s.charAt(startIndex);
-                    if (charCount.containsKey(charAtStart) && charCount.get(charAtStart) == 0) {
-                        break;
-                    }
-                    charCount.put(charAtStart, charCount.getOrDefault(charAtStart, 0) + 1);
-                    startIndex++;
+        char[] s = str.toCharArray();
+        int left = 0, ansLeft = -1, ansRight = s.length;
+        for (int right = 0; right < s.length; right++) {
+            char c = s[right];
+            dict[c]--;
+            if (dict[c] == 0) {
+                count--;
+            }
+
+            while (count == 0) {
+                if (right - left < ansRight - ansLeft) {
+                    ansLeft = left;
+                    ansRight = right;
                 }
 
-                if (endIndex - startIndex < minWindow[1] - minWindow[0]) {
-                    minWindow[0] = startIndex;
-                    minWindow[1] = endIndex;
-                }
+                if (dict[s[left]] == 0)
+                    count++;
 
-                charCount.put(s.charAt(startIndex), charCount.getOrDefault(s.charAt(startIndex), 0) + 1);
-                targetCharsRemaining++;
-                startIndex++;
+                dict[s[left]]++;
+                left++;
             }
         }
-
-        return minWindow[1] >= s.length() ? "" : s.substring(minWindow[0], minWindow[1] + 1);        
+        return ansLeft < 0 ? "" : str.substring(ansLeft, ansRight + 1);
     }
 }
