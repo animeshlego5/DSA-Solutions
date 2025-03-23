@@ -4,46 +4,43 @@ class Solution {
             return "";
         }
 
-        // Frequency map for characters in `t`
-        HashMap<Character, Integer> map = new HashMap<>();
-        for (int i = 0; i < t.length(); i++) {
-            map.put(t.charAt(i), map.getOrDefault(t.charAt(i), 0) + 1);
+        Map<Character, Integer> charCount = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            charCount.put(ch, charCount.getOrDefault(ch, 0) + 1);
         }
 
-        int left = 0, right = 0, start = 0, minLength = Integer.MAX_VALUE;
-        HashMap<Character, Integer> ans = new HashMap<>();
-        int required = map.size();
-        int formed = 0;
+        int targetCharsRemaining = t.length();
+        int[] minWindow = {0, Integer.MAX_VALUE};
+        int startIndex = 0;
 
-        while (right < s.length()) {
-            char c = s.charAt(right);
-            ans.put(c, ans.getOrDefault(c, 0) + 1);
-
-            if (map.containsKey(c) && ans.get(c).equals(map.get(c))) {
-                formed++;
+        for (int endIndex = 0; endIndex < s.length(); endIndex++) {
+            char ch = s.charAt(endIndex);
+            if (charCount.containsKey(ch) && charCount.get(ch) > 0) {
+                targetCharsRemaining--;
             }
+            charCount.put(ch, charCount.getOrDefault(ch, 0) - 1);
 
-            // Contract the window
-            while (left <= right && formed == required) {
-                c = s.charAt(left);
-
-                // Update the minimum length window
-                if (right - left + 1 < minLength) {
-                    minLength = right - left + 1;
-                    start = left;
+            if (targetCharsRemaining == 0) {
+                while (true) {
+                    char charAtStart = s.charAt(startIndex);
+                    if (charCount.containsKey(charAtStart) && charCount.get(charAtStart) == 0) {
+                        break;
+                    }
+                    charCount.put(charAtStart, charCount.getOrDefault(charAtStart, 0) + 1);
+                    startIndex++;
                 }
 
-                ans.put(c, ans.get(c) - 1);
-                if (map.containsKey(c) && ans.get(c) < map.get(c)) {
-                    formed--;
+                if (endIndex - startIndex < minWindow[1] - minWindow[0]) {
+                    minWindow[0] = startIndex;
+                    minWindow[1] = endIndex;
                 }
 
-                left++;
+                charCount.put(s.charAt(startIndex), charCount.getOrDefault(s.charAt(startIndex), 0) + 1);
+                targetCharsRemaining++;
+                startIndex++;
             }
-
-            right++;
         }
 
-        return minLength == Integer.MAX_VALUE ? "" : s.substring(start, start + minLength);
+        return minWindow[1] >= s.length() ? "" : s.substring(minWindow[0], minWindow[1] + 1);        
     }
 }
