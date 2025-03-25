@@ -1,14 +1,14 @@
 class Solution {
     public int smallestDivisor(int[] nums, int threshold) {
         int start = 1;
-        int end = Integer.MIN_VALUE;
+        int end = 1000000;
         int ans = -1;
         
-        for(int i = 0; i <nums.length; i++){
-            if(nums[i]>end){
-                end = nums[i];
-            }
-        }
+        // for(int i = 0; i <nums.length; i++){
+        //     if(nums[i]>end){
+        //         end = nums[i];
+        //     }
+        // }
 
         while (start <= end){
             int mid = start + (end - start)/2;
