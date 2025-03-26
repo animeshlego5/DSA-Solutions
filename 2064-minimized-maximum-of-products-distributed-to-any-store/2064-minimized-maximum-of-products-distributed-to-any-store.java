@@ -22,17 +22,14 @@ class Solution {
         return ans;
     }
     static boolean canBeDist(int[] quantities, int n, int mid){
-        
+        int count = 0;
         for(int i = 0; i < quantities.length; i++){
-            int current = quantities[i];
-            if(mid!=0){
-                int num = current/mid;
-            n = n - num;
-            if(current%mid!=0){
-                n--;
-            }}
+           count = count + quantities[i]/mid;
+           if(quantities[i]%mid!=0) {
+                count++;
+            }
         }
-        if(n<0){
+        if(n<count){
             return false;
         }
         return true;
