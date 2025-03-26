@@ -28,10 +28,11 @@ class Solution {
            if(quantities[i]%mid!=0) {
                 count++;
             }
-        }
-        if(n<count){
+            if(n<count){
             return false;
         }
+        }
+        
         return true;
     }
 }
