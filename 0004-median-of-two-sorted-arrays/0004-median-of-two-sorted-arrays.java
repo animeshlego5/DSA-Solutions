@@ -1,10 +1,10 @@
-
-public class Solution {
-    public static void main(String[] args) {
-
-    }
+class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-
+        // make num1 as min length array.
+        // call same function, and change the params
+        // if nums1 was greater and nums2 was smaller
+        // so because we swapped these two, now nums1 is smaller and
+        // nums2 is greater.
         if(nums1.length > nums2.length){
             return findMedianSortedArrays(nums2,nums1);
         }
@@ -44,10 +44,3 @@ public class Solution {
     return 0.0; // to avoid error
     }
 }
-
-
-
-
-
-
-
