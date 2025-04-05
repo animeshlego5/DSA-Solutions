@@ -7,9 +7,7 @@ class Solution {
         while (start<=end){
             int mid = start + (end - start)/2;
             
-            int r = mid/column;
-            int c = mid%column;
-            int current = matrix[r][c];
+            int current = matrix[mid/column][mid%column];
             
             if(current==target){
                 return true;
