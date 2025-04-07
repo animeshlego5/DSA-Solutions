@@ -5,12 +5,13 @@ class Solution {
 
         while (start <= end){
             int mid = start + (end - start)/2;
-            if(x%mid==0 && mid == x/mid){
+            if (mid<=x/mid){
+                if(x%mid==0 && mid == x/mid){
                 return mid;
-            } else if (mid>x/mid){
-                end  = mid -1;
-            } else {
+            }
                 start = mid + 1;
+            } else {
+                end  = mid -1;
             }
         }
         return end;
