@@ -3,12 +3,8 @@ class Solution {
         int n = matrix.length;
         int m = matrix[0].length; //columns
 
-        int r = 0;
-        int c = m - 1;
-
-        
-
-        while(r<n && c>=0){
+        int r = 0, c = m - 1;
+ while(r<n && c>=0){
             
             if(matrix[r][c]==target) {
                 return true;
