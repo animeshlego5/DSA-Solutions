@@ -9,10 +9,10 @@ class Solution {
         
 
         while(r<n && c>=0){
-            int current = matrix[r][c];
-            if(current==target) {
+            
+            if(matrix[r][c]==target) {
                 return true;
-            } else if(current<target){
+            } else if(matrix[r][c]<target){
                 r++;
             } else {
                 c--;
