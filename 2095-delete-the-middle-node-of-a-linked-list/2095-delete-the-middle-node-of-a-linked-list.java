@@ -13,6 +13,9 @@ class Solution {
         ListNode slow = head;
         ListNode fast = head;
         int count = 0;
+        if(head.next==null){
+            return null;
+        }
         while(fast!=null && fast.next!=null){
             if(slow==head && count==0){
                 count++;
