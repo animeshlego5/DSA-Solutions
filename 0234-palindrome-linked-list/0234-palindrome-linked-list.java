@@ -9,33 +9,43 @@
  * }
  */
 class Solution {
-    public boolean isPalindrome(ListNode head) {
-        ListNode prev = null;
+    public ListNode findMiddle(ListNode head) {
         ListNode slow = head;
         ListNode fast = head;
-        ListNode newHead = null;
-        while(fast!=null && fast.next!=null){
-            prev = slow;
+        while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
-            if(newHead == null){
-                newHead = new ListNode(prev.val);
-            } else {
-                ListNode node = new ListNode(prev.val);
-                node.next = newHead;
-                newHead = node;
-            }
+
         }
-        //if n is odd
-        if(fast!=null){
-            slow = slow.next;
+        return slow;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        ListNode nextNode = null;
+        while(curr!=null){
+            nextNode = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextNode;
         }
-        while(slow!=null && newHead!=null){
-            if(slow.val!=newHead.val){
+        return prev;
+    }
+
+    public boolean isPalindrome(ListNode head) {
+        if(head==null || head.next==null){
+            return true;
+        }
+        ListNode middle = findMiddle(head);
+        ListNode last = reverseList(middle);
+        ListNode node = head;
+        while(node!=null && last!=null){
+            if(node.val!=last.val){
                 return false;
             }
-            slow = slow.next;
-            newHead = newHead.next;
+            last = last.next;
+            node = node.next;
         }
         return true;
     }
