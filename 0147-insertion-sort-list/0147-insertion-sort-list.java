@@ -1,46 +1,27 @@
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
 class Solution {
     public ListNode insertionSortList(ListNode head) {
-        if(head==null || head.next ==null)return head;
-        ListNode temp = head.next;
+        if (head == null) return null;
 
-        ListNode tail = head;
+        ListNode dummy = new ListNode(0); // Dummy node before the sorted list
+        ListNode curr = head;
 
-        while(temp!=null){
-            if(temp.val>=tail.val){
-                tail = temp;
-                temp = temp.next;
-                continue;
-            } 
-            tail.next = temp.next;
+        while (curr != null) {
+            ListNode prev = dummy;
+            ListNode next = curr.next;
 
-            ListNode prev = null;
-            ListNode node = head;
-            while(node!=tail.next){
-                if(temp.val<=node.val){
-                   break;
-                }
-                prev = node;
-                node = node.next;
+            // Find the right spot in the sorted part (before curr)
+            while (prev.next != null && prev.next.val < curr.val) {
+                prev = prev.next;
             }
-            if(prev==null){//insertion at head
-                temp.next = head;
-                head = temp;           
-            } else {
-                temp.next = prev.next;
-                prev.next = temp;
-            }
-            temp = tail.next;
+
+            // Insert curr between prev and prev.next
+            curr.next = prev.next;
+            prev.next = curr;
+
+            // Move to the next node in the original list
+            curr = next;
         }
-        return head;
+
+        return dummy.next;
     }
 }
