@@ -1,46 +1,37 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        HashMap<Integer, Integer> index = new HashMap<>();
+        Map<Integer, Integer> inorderIndexMap = new HashMap<>();
+        // Build a hashmap to store value -> index mappings for inorder
         for (int i = 0; i < inorder.length; i++) {
-            index.put(inorder[i], i);
+            inorderIndexMap.put(inorder[i], i);
         }
-        int n = preorder.length - 1;
-        int m = inorder.length - 1;
-        TreeNode root = constructTree(preorder, inorder, index, 0, n, 0, m);
-        return root;
 
+        return build(preorder, 0, preorder.length - 1,
+                     inorder, 0, inorder.length - 1,
+                     inorderIndexMap);
     }
 
-    public TreeNode constructTree(int[] preorder, int[] inorder, HashMap<Integer, Integer> index, int preIndStart,
-            int preIndEnd, int inIndStart, int inIndEnd) {
-        //base case
-        if (preIndStart > preIndEnd || inIndStart > inIndEnd) {
-            return null;
+    private TreeNode build(int[] preorder, int preStart, int preEnd,
+                           int[] inorder, int inStart, int inEnd,
+                           Map<Integer, Integer> inorderIndexMap) {
+
+        if (preStart > preEnd || inStart > inEnd) {
+            return null; // base case
         }
-        int rootValue = preorder[preIndStart];
-        int rootIndex = index.get(rootValue);
-        TreeNode root = new TreeNode(rootValue);
-        int leftSubTree = rootIndex - inIndStart;
-       
-        root.left = constructTree(preorder, inorder, index, preIndStart + 1, preIndStart + leftSubTree, inIndStart,
-                rootIndex - 1);
-        root.right = constructTree(preorder, inorder, index, preIndStart + leftSubTree + 1, preIndEnd, rootIndex + 1,
-                inIndEnd);
+
+        int rootVal = preorder[preStart]; // first element is root
+        TreeNode root = new TreeNode(rootVal);
+
+        int inRootIndex = inorderIndexMap.get(rootVal); // index of root in inorder
+        int numsLeft = inRootIndex - inStart; // # of nodes in left subtree
+
+        root.left = build(preorder, preStart + 1, preStart + numsLeft,
+                          inorder, inStart, inRootIndex - 1,
+                          inorderIndexMap);
+
+        root.right = build(preorder, preStart + numsLeft + 1, preEnd,
+                           inorder, inRootIndex + 1, inEnd,
+                           inorderIndexMap);
 
         return root;
     }
