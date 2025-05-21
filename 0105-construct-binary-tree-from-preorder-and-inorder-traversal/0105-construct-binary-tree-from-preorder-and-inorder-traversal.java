@@ -15,28 +15,33 @@
  */
 class Solution {
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        HashMap<Integer,Integer> index = new HashMap<>();
-        for(int i = 0; i < inorder.length; i++){
-            index.put(inorder[i],i);
+        HashMap<Integer, Integer> index = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            index.put(inorder[i], i);
         }
         int n = preorder.length - 1;
         int m = inorder.length - 1;
-        TreeNode root = constructTree(preorder, inorder, index, 0,n, 0, m);
+        TreeNode root = constructTree(preorder, inorder, index, 0, n, 0, m);
         return root;
 
     }
-    public TreeNode constructTree(int[] preorder, int[] inorder, HashMap<Integer,Integer> index, int preIndStart, int preIndEnd, int inIndStart, int inIndEnd){
+
+    public TreeNode constructTree(int[] preorder, int[] inorder, HashMap<Integer, Integer> index, int preIndStart,
+            int preIndEnd, int inIndStart, int inIndEnd) {
         //base case
-        if(preIndStart>preIndEnd || inIndStart > inIndEnd){
+        if (preIndStart > preIndEnd || inIndStart > inIndEnd) {
             return null;
         }
         int rootValue = preorder[preIndStart];
         int rootIndex = index.get(rootValue);
         TreeNode root = new TreeNode(rootValue);
         int leftSubTree = rootIndex - inIndStart;
-        int rightSubTree = inIndEnd - rootIndex;
-        root.left = constructTree(preorder, inorder, index,preIndStart +1 ,preIndStart + leftSubTree, inIndStart, rootIndex-1);
-        root.right = constructTree(preorder, inorder, index, preIndStart + leftSubTree + 1,preIndEnd, rootIndex+1, inIndEnd);
+       
+        root.left = constructTree(preorder, inorder, index, preIndStart + 1, preIndStart + leftSubTree, inIndStart,
+                rootIndex - 1);
+        root.right = constructTree(preorder, inorder, index, preIndStart + leftSubTree + 1, preIndEnd, rootIndex + 1,
+                inIndEnd);
 
-    return root;}
+        return root;
+    }
 }
