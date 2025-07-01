@@ -1,5 +1,10 @@
 class Solution {
     public boolean containsDuplicate(int[] nums) {
-        return Arrays.stream(nums).distinct().count()<nums.length;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i < nums.length; i++){
+            map.put(nums[i], i);
+        }
+        if(map.size()==nums.length)return false;
+        return true;
     }
 }
