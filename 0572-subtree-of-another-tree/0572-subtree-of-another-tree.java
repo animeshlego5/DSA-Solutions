@@ -15,26 +15,16 @@
  */
 class Solution {
     public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        if(subRoot==null)return true;
         if(root==null)return false;
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-        while(!queue.isEmpty()){
-            for(int i = 0; i < queue.size(); i++){
-               TreeNode node =  queue.poll();
-               if(node==null)continue;
-               if(node.val==subRoot.val){
-                 if(BFS(node, subRoot)==true)return true;
-               }
-               queue.offer(node.left);
-               queue.offer(node.right);
-            }
-        }
-        return false;
-    }
-    public boolean BFS(TreeNode a, TreeNode b){
-        if(a==null && b==null)return true;
-        if(a==null || b==null || a.val!=b.val)return false;
-        return BFS(a.left, b.left)&&BFS(a.right, b.right);
+        if(isSame(root, subRoot))return true;
+        return isSubtree(root.left, subRoot)||isSubtree(root.right, subRoot);
 
+    }
+    public boolean isSame(TreeNode a, TreeNode b){
+        if(a==null&&b==null)return true;
+        if(a==null || b==null ||a.val!=b.val)return false;
+        
+        return isSame(a.left, b.left)&&isSame(a.right, b.right);
     }
 }
