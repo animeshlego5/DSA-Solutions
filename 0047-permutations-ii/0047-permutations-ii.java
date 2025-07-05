@@ -1,8 +1,9 @@
 class Solution {
     List<List<Integer>>res = new ArrayList<>();
     public List<List<Integer>> permuteUnique(int[] nums) {
+        
+        Arrays.sort(nums);
         helper(nums, 0);
-
         return res;
     }
     public void helper(int[] nums, int i){
@@ -13,12 +14,13 @@ class Solution {
             for(int num:nums){
                 sublist.add(num);
             }
-            if(res.contains(sublist))return;
             res.add(new ArrayList<>(sublist));
             return;
         }
+        Set<Integer> swapped = new HashSet<>();
         for(int j = i; j<n;j++){
-            
+         if (swapped.contains(nums[j])) continue;  // Skip duplicate swaps
+            swapped.add(nums[j]);   
         swap(nums, i, j);
         helper(nums, i+1);
         swap(nums, i, j);
