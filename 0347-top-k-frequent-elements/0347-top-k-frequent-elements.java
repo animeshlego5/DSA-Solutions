@@ -1,28 +1,33 @@
-public class Solution {
+class Number implements Comparable<Number>{
+    int element;
+    int freq;
+    Number(int element, int freq){
+        this.element = element;
+        this.freq = freq;
+    }
+
+    public int compareTo(Number that){
+        //max heap
+        return that.freq - this.freq; //decreasing order
+    }
+}
+class Solution {
+
     public int[] topKFrequent(int[] nums, int k) {
-        Map<Integer, Integer> count = new HashMap<>();
-        List<Integer>[] freq = new List[nums.length + 1];
+        PriorityQueue<Number> pq = new PriorityQueue<>();
+        HashMap<Integer, Integer> freqMap = new HashMap<>();
 
-        for (int i = 0; i < freq.length; i++) {
-            freq[i] = new ArrayList<>();
+        for(int element:nums){
+            freqMap.put(element, freqMap.getOrDefault(element, 0) + 1);
         }
-
-        for (int n : nums) {
-            count.put(n, count.getOrDefault(n, 0) + 1);
+        //insert element in pq
+        for(Map.Entry<Integer, Integer> entry:freqMap.entrySet()){
+            Number number = new Number(entry.getKey(), entry.getValue());
+            pq.offer(number);
         }
-        for (Map.Entry<Integer, Integer> entry : count.entrySet()) {
-            freq[entry.getValue()].add(entry.getKey());
-        }
-
-        int[] res = new int[k];
-        int index = 0;
-        for (int i = freq.length - 1; i > 0 && index < k; i--) {
-            for (int n : freq[i]) {
-                res[index++] = n;
-                if (index == k) {
-                    return res;
-                }
-            }
+        int res[] = new int[k];
+        for(int i = 0; i < k; i++){
+            res[i] = pq.poll().element;
         }
         return res;
     }
