@@ -9,7 +9,7 @@ class MedianFinder {
     
     public void addNum(int num) {
         size++;
-        if(num<=maxheap.size() || maxheap.isEmpty()){
+        if(  maxheap.isEmpty() ||num<=maxheap.peek()){
             maxheap.add(num);
         } else{
             minheap.add(num);
@@ -24,9 +24,7 @@ class MedianFinder {
     
     public double findMedian() {
         if(size%2==0){
-            int l = maxheap.peek();
-            int r = minheap.peek();
-            return (double)(l+r)/2;
+            return (maxheap.peek() + minheap.peek())/2.0;
         } else return (maxheap.size()>minheap.size())?(double)maxheap.peek():(double)minheap.peek();
     }
 }
