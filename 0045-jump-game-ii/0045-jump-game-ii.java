@@ -9,9 +9,8 @@ class Solution {
             if(i==lastindex){
                 jumps++;
                 lastindex = coverage; 
-                 if(coverage>=nums.length-1)return jumps;
             }
-           
+            if(coverage>=nums.length-1)return jumps;
         }
         return jumps;
 
