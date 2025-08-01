@@ -1,35 +1,46 @@
 class WordDictionary {
-    List<String> dict;
+    private static class TrieNode {
+        TrieNode[] children = new TrieNode[26];
+        boolean isEnd = false;
+    }
+
+    private TrieNode root;
 
     public WordDictionary() {
-        dict = new ArrayList<>();
+        root = new TrieNode();
     }
-    
+
     public void addWord(String word) {
-        dict.add(word);
-    }
-    
-    public boolean search(String word) {
-        for (String w : dict) {
-            if (w.length() != word.length()) {
-                continue;
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            int idx = c - 'a';
+            if (node.children[idx] == null) {
+                node.children[idx] = new TrieNode();
             }
-            boolean match = true;
-            for (int i = 0; i < word.length(); i++) {
-                if (word.charAt(i) != '.' && word.charAt(i) != w.charAt(i)) {
-                    match = false;
-                    break;
+            node = node.children[idx];
+        }
+        node.isEnd = true;
+    }
+
+    public boolean search(String word) {
+        return searchInNode(word, 0, root);
+    }
+
+    private boolean searchInNode(String word, int index, TrieNode node) {
+        if (node == null) return false;
+        if (index == word.length()) return node.isEnd;
+
+        char c = word.charAt(index);
+        if (c == '.') {
+            for (TrieNode child : node.children) {
+                if (child != null && searchInNode(word, index + 1, child)) {
+                    return true;
                 }
             }
-            if (match) return true;
+            return false;
+        } else {
+            int idx = c - 'a';
+            return searchInNode(word, index + 1, node.children[idx]);
         }
-        return false;
     }
 }
-
-/**
- * Your WordDictionary object will be instantiated and called as such:
- * WordDictionary obj = new WordDictionary();
- * obj.addWord(word);
- * boolean param_2 = obj.search(word);
- */
