@@ -1,35 +1,19 @@
 class MyHashSet {
-    List<Integer> arr;
-
+    private boolean[] set;
+    
     public MyHashSet() {
-        arr = new ArrayList<>();
+        set = new boolean[1000001]; // key range 0..1,000,000
     }
     
     public void add(int key) {
-        for(int i = 0; i < arr.size(); i++){
-            if(arr.get(i)==key)return;
-        }
-        arr.add(key);
+        set[key] = true;
     }
     
     public void remove(int key) {
-        for(int i = 0; i < arr.size(); i++){
-            if(arr.get(i)==key)arr.remove(i);
-        }
+        set[key] = false;
     }
     
     public boolean contains(int key) {
-        for(int i = 0; i < arr.size(); i++){
-            if(arr.get(i)==key)return true;
-        }
-        return false;
+        return set[key];
     }
 }
-
-/**
- * Your MyHashSet object will be instantiated and called as such:
- * MyHashSet obj = new MyHashSet();
- * obj.add(key);
- * obj.remove(key);
- * boolean param_3 = obj.contains(key);
- */
