@@ -1,38 +1,27 @@
 class Solution {
     public int minEatingSpeed(int[] piles, int h) {
-        int start = 1;
-        int end = Integer.MIN_VALUE;
-        int ans = -1;
-
-        for(int i = 0; i<piles.length; i++){
-            if(piles[i]>end){
-                end = piles[i];
-            }
-        }
-
-        //Now we have th erange, so we will apply binary search
-        while (start<=end){
-            int mid = start + (end - start)/2;
-
-            if(canBeEaten(piles, h, mid)){
-                ans = mid;
-                end = mid - 1;
+        int right = Integer.MIN_VALUE;
+       for(int i : piles){
+        if(i>right)right=i;
+       }
+       int left = 1; 
+        
+       while(left<right){
+        int mid = left + (right - left)/2;
+            if(canEat(mid, piles, h)){
+                right = mid;
             } else {
-                start = mid + 1;
+                left = mid + 1;
             }
-        }
-        return ans;
+       }
+       return left;
     }
-    static boolean canBeEaten(int[] piles, int h, int mid){
-        int hourseaten = 0;
-        for(int i = 0; i<piles.length; i++){
-            hourseaten += piles[i]/mid;
-            if(piles[i]%mid!=0){
-                hourseaten++;
-            }
-            if(hourseaten>h){return false;}
-
+    private boolean canEat(int bananas, int[] piles, int h){
+        int hours = 0;
+        for(int pile : piles){
+            hours += (int)Math.ceil((double)pile/bananas);
+            if(hours>h)return false;
         }
-        return true;
+        return h>=hours;
     }
 }
