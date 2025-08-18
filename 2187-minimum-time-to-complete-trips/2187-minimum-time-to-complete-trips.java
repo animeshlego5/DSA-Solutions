@@ -1,13 +1,13 @@
 class Solution {
     public long minimumTime(int[] time, int totalTrips) {
-        int right = time[0];
-        int left = 1;
+        long right = time[0];
+        long left = 1;
         for(int times : time){
             right = Math.min(right, times);
         }
         right = totalTrips * right;
         while(left<right){
-            int mid = left + (right - left)/2;
+            long mid = left + (right - left)/2;
             if(canComplete(mid, time, totalTrips)){
                 right = mid;
             } else {
@@ -16,10 +16,13 @@ class Solution {
         }
         return left;
     }
-    private boolean canComplete(int timeTaken, int[] time, int totalTrips){
-        int total = 0;
+    private boolean canComplete(long timeTaken, int[] time, int totalTrips){
+        long total = 0;
         for(int times : time){
             total += timeTaken/times;
+            if (total >= totalTrips) {
+                return true; // early stopping to avoid overflow
+            }
         }
         return total>=totalTrips;
     }
