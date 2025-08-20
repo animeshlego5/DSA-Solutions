@@ -1,39 +1,32 @@
 class Solution {
-    public int[][] colorBorder(int[][] grid, int row, int col, int color) {
-
-        int m = grid.length;
-        int n = grid[0].length;
-        int oldColor = grid[row][col];
-
-        dfs(grid,row,col,m,n,oldColor,color,new boolean[m][n]);
-        return grid;
-    }
-
-    public void dfs(int[][] grid,int r,int c,int m,int n,int oldColor,int newColor,boolean[][] visited){
-
-        visited[r][c] = true;
+    private int[] dx = {-1, 0, 1, 0};
+    private int[] dy = {0, 1, 0, -1};
+    private int n, m;
+    private int changeTo;
+    
+    public void dfs(int x, int y, int[][] grid, int color, boolean[][] vis){
+        vis[x][y] = true;
+        boolean boundaryCell = false;
         
-        int[] arr1 = {0,0,-1,1};
-        int[] arr2 = {1,-1,0,0};
-
-        for(int i=0;i<4;i++){
-            
-            int nr = r+arr1[i];
-            int nc = c+ arr2[i];
-
-            if(nr>=0 && nc>=0 && nr<m && nc<n && !visited[nr][nc] ){
-
-                if(grid[nr][nc] == oldColor)
-                    dfs(grid,nr,nc,m,n,oldColor,newColor,visited);
-                else
-                    grid[r][c] = newColor;
-
+        int nx, ny;
+        for(int d=0; d<4; d++){
+            nx = x + dx[d];
+            ny = y + dy[d];
+            if(nx < 0 || nx >= n || ny < 0 || ny >= m || (!vis[nx][ny] && grid[nx][ny] != color)){
+                grid[x][y] = changeTo;
+                continue;
             }
-            
-            else if(nr<0 || nc<0 || nr>=m || nc>=n)
-                grid[r][c] = newColor;
-            
+            if(!vis[nx][ny])
+                dfs(nx, ny, grid, color, vis);
         }
-
+            
+    }
+    
+    public int[][] colorBorder(int[][] grid, int row, int col, int color) {
+        n = grid.length; m = grid[0].length;
+        boolean[][] vis = new boolean[n][m];
+        changeTo = color;
+        dfs(row, col, grid, grid[row][col], vis);
+        return grid;
     }
 }
