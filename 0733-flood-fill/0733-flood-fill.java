@@ -11,7 +11,7 @@ class Solution {
         return image;
     }
     private void dfs(int[][]image, int row, int col, int original, int color){
-        if(row<0 || col <0 || row>=image.length || col>=image[0].length ||image[row][col]!=original)return;
+        
         image[row][col] = color;
         for(int i = 0; i < 4; i++){
             int newRow = row + delrow[i];
