@@ -1,6 +1,5 @@
 class Solution {
-    private int[] dx = {-1, 0, 1, 0};
-    private int[] dy = {0, 1, 0, -1};
+    private int[][] dir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     private int n, m;
     private int changeTo;
     
@@ -9,9 +8,9 @@ class Solution {
         boolean boundaryCell = false;
         
         int nx, ny;
-        for(int d=0; d<4; d++){
-            nx = x + dx[d];
-            ny = y + dy[d];
+        for(int[]d : dir){
+            nx = x + d[0];
+            ny = y + d[1];
             if(nx < 0 || nx >= n || ny < 0 || ny >= m || (!vis[nx][ny] && grid[nx][ny] != color)){
                 grid[x][y] = changeTo;
                 continue;
