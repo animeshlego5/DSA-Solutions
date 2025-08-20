@@ -17,7 +17,7 @@ class Solution {
         return 1 + count;
     }
     private boolean inRange(int[] a, int[] b){
-        int dx = a[0]-b[0], dy = a[1]-b[1], r=a[2];
+        long dx = a[0]-b[0], dy= a[1]-b[1], r=a[2];
         return dx * dx + dy * dy <= r * r;
     }
 }
