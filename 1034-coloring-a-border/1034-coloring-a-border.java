@@ -1,29 +1,39 @@
 class Solution {
-    private static int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
     public int[][] colorBorder(int[][] grid, int row, int col, int color) {
-        int rowLength = grid.length;
-        int colLength = grid[0].length;
-        int original = grid[row][col];
-        dfs(grid, original, row, col);
-        for(int i = 0; i < rowLength; i++){
-            for(int j = 0; j < colLength; j++){
-                if(grid[i][j]<0)grid[i][j]=color;
-            }
-        }
 
+        int m = grid.length;
+        int n = grid[0].length;
+        int oldColor = grid[row][col];
+
+        dfs(grid,row,col,m,n,oldColor,color,new boolean[m][n]);
         return grid;
     }
-    private void dfs(int[][]grid, int original, int row, int col){
-        if(row<0 || row>grid.length-1 || col<0 || col>grid[0].length-1 || grid[row][col]!=original)return;
-        grid[row][col] = -original;
-        int count = 0;
-        for(int[]d : dir){
-            int newRow = row + d[0];
-            int newCol = col + d[1];
 
-            if(newRow>=0 && newCol>=0 && newRow<=grid.length-1 && newCol<=grid[0].length-1 &&Math.abs(grid[newRow][newCol])==original)count++;
-            dfs(grid, original, newRow, newCol);
+    public void dfs(int[][] grid,int r,int c,int m,int n,int oldColor,int newColor,boolean[][] visited){
+
+        visited[r][c] = true;
+        
+        int[] arr1 = {0,0,-1,1};
+        int[] arr2 = {1,-1,0,0};
+
+        for(int i=0;i<4;i++){
+            
+            int nr = r+arr1[i];
+            int nc = c+ arr2[i];
+
+            if(nr>=0 && nc>=0 && nr<m && nc<n && !visited[nr][nc] ){
+
+                if(grid[nr][nc] == oldColor)
+                    dfs(grid,nr,nc,m,n,oldColor,newColor,visited);
+                else
+                    grid[r][c] = newColor;
+
+            }
+            
+            else if(nr<0 || nc<0 || nr>=m || nc>=n)
+                grid[r][c] = newColor;
+            
         }
-        if(count==4)grid[row][col] = original;
+
     }
 }
