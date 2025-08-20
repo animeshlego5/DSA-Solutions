@@ -18,8 +18,7 @@ class Solution {
             }
             if(!vis[nx][ny])
                 dfs(nx, ny, grid, color, vis);
-        }
-            
+        }      
     }
     
     public int[][] colorBorder(int[][] grid, int row, int col, int color) {
