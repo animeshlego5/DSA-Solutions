@@ -4,8 +4,6 @@ class Solution {
     public int[][] floodFill(int[][] image, int sr, int sc, int color) {
 
         int original = image[sr][sc];
-        int rowLength = image.length;
-        int colLength = image[0].length;
         if(original==color)return image;
         dfs(image, sr, sc, original, color);
         return image;
