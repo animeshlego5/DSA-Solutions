@@ -6,8 +6,8 @@ class Solution {
         
         for(int i=0; i <31; i++){
             int y = 0;
-            for(int num : nums){
-                if((num & (1<<i))!=0){
+            for(int j = 0; j < n; j++){
+                if((nums[j] & (1<<i))!=0){
                     y++;
                 }
             }
