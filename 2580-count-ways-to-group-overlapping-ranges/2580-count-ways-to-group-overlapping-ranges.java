@@ -6,7 +6,7 @@ class Solution {
         Arrays.sort(ranges, (a,b)->a[0]-b[0]);
         for(int[] r : ranges){
             if(last < r[0]){
-                res *= 2 %mod;
+                res = res * 2 %mod;
             }
             last = Math.max(last, r[1]);
         }
