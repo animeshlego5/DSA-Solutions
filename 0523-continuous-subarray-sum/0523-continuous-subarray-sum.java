@@ -10,8 +10,9 @@ class Solution {
                 if((i-map.get(sum%k))>=2){
                     return true;
                 }
+            } else {
+                map.put(sum%k, i);
             }
-            map.putIfAbsent(sum%k, i);
             
         }
         return false;
