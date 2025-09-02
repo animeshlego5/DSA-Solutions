@@ -9,7 +9,7 @@ class Solution {
             
             int rem = (sum%k);
             if(rem<0){
-                rem = rem + k;
+                rem = rem%k + k;
             }
             if(map.containsKey(rem)){
                 count += map.get(rem);
