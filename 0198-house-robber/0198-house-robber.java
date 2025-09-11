@@ -1,16 +1,18 @@
 class Solution {
     public int rob(int[] nums) {
-        int n = nums.length;
-        int[] dp = new int[n+1];
         
-        dp[0] = 0;
-        dp[1] = nums[0];
-        
-        for(int state = 2; state<=n; state++){
-            int pick = nums[state-1] + dp[state-2];
-            int nopick = 0 + dp[state-1];
-            dp[state] = Math.max(pick, nopick);
+       if (nums.length == 0) return 0;
+        if (nums.length == 1) return nums[0];
+
+        int prev2 = nums[0]; // house 0 tak max
+        int prev1 = Math.max(nums[0], nums[1]); // house 1 tak max
+
+        for (int i = 2; i < nums.length; i++) {
+            int curr = Math.max(prev1, prev2 + nums[i]);
+            prev2 = prev1;
+            prev1 = curr;
         }
-        return dp[n];
+
+        return prev1; 
     }
 }
