@@ -50,7 +50,8 @@ class MovieRentingSystem {
     public List<Integer> search(int movie) {
         int count = 0;
         List<Integer> shops = new ArrayList<>();
-        for(Movie m : movies.get(movie)){
+        TreeSet<Movie> availableMovies = movies.getOrDefault(movie, new TreeSet<>());
+        for(Movie m : availableMovies){
             if(count==5)break;
             shops.add(m.shop);
             count++;
