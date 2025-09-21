@@ -1,51 +1,105 @@
 class MovieRentingSystem {
-  public MovieRentingSystem(int n, int[][] entries) {
-    for (int[] e : entries) {
-      final int shop = e[0];
-      final int movie = e[1];
-      final int price = e[2];
-      unrented.putIfAbsent(movie, new TreeSet<>(comparator));
-      unrented.get(movie).add(new Entry(price, shop, movie));
-      shopAndMovieToPrice.put(new Pair<>(shop, movie), price);
+    private class Movie {
+        int shop;
+        int price;
+
+        Movie(int shop, int price) {
+            this.shop = shop;
+            this.price = price;
+        }
     }
-  }
 
-  public List<Integer> search(int movie) {
-    return unrented.getOrDefault(movie, Collections.emptySet())
-        .stream()
-        .limit(5)
-        .map(e -> e.shop)
-        .collect(Collectors.toList());
-  }
+    private class Rent {
+        int shop;
+        int movie;
+        int price;
 
-  public void rent(int shop, int movie) {
-    final int price = shopAndMovieToPrice.get(new Pair<>(shop, movie));
-    unrented.get(movie).remove(new Entry(price, shop, movie));
-    rented.add(new Entry(price, shop, movie));
-  }
+        Rent(int shop, int movie, int price) {
+            this.shop = shop;
+            this.movie = movie;
+            this.price = price;
+        }
+    }
 
-  public void drop(int shop, int movie) {
-    final int price = shopAndMovieToPrice.get(new Pair<>(shop, movie));
-    unrented.get(movie).add(new Entry(price, shop, movie));
-    rented.remove(new Entry(price, shop, movie));
-  }
+    Map<Integer, TreeSet<Movie>> movies = new HashMap<>();
+    TreeSet<Rent> rentedMovies = new TreeSet<>((a,b)-> {
+    if(a.price!=b.price)return Integer.compare(a.price, b.price);
+    if(a.shop!=b.shop) return Integer.compare(a.shop, b.shop);
+    return Integer.compare(a.movie, b.movie);});
+    Map<String, Integer> priceMap = new HashMap<>();
 
-  public List<List<Integer>> report() {
-    return rented.stream().limit(5).map(e -> List.of(e.shop, e.movie)).collect(Collectors.toList());
-  }
 
-  private record Entry(int price, int shop, int movie) {}
+    public MovieRentingSystem(int n, int[][] entries) {
+        for(int[] e : entries){
+            int shop = e[0], movie = e[1], price = e[2];
 
-  private Comparator<Entry> comparator = Comparator.comparingInt(Entry::price)
-                                             .thenComparingInt(Entry::shop)
-                                             .thenComparingInt(Entry::movie);
+            String key = getKey(shop, movie);
+            priceMap.put(key, price);
 
-  // {movie: (price, shop)}
-  private Map<Integer, Set<Entry>> unrented = new HashMap<>();
+            movies.computeIfAbsent(movie, k->new TreeSet<>((a,b)->{
+                if(a.price!=b.price)return Integer.compare(a.price, b.price);
+                return Integer.compare(a.shop, b.shop);
+            })).add(new Movie(shop, price));
+        }
+    }
 
-  // {(shop, movie): price}
-  private Map<Pair<Integer, Integer>, Integer> shopAndMovieToPrice = new HashMap<>();
+    private String getKey(int shop , int price){
+        return shop + "_" + price;
+    }
 
-  // (price, shop, movie)
-  private Set<Entry> rented = new TreeSet<>(comparator);
+    public List<Integer> search(int movie) {
+        int count = 0;
+        List<Integer> shops = new ArrayList<>();
+        for(Movie m : movies.get(movie)){
+            if(count==5)break;
+            shops.add(m.shop);
+            count++;
+        }
+        return shops;
+    }
+
+    public void rent(int shop, int movie) {
+        String key = getKey(shop, movie);
+        int price = priceMap.get(key);
+        rentedMovies.add(new Rent(shop, movie, price));
+
+        TreeSet<Movie> availableMovies = movies.get(movie);
+        availableMovies.remove(new Movie(shop, price));
+    }
+
+    public void drop(int shop, int movie) {
+        String key = getKey(shop, movie);
+        int price = priceMap.get(key);
+        rentedMovies.remove(new Rent(shop, movie, price));
+
+        TreeSet<Movie> availableMovies = movies.get(movie);
+        availableMovies.add(new Movie(shop, price));
+        movies.put(movie, availableMovies);
+    }
+
+    public List<List<Integer>> report() {
+        List<List<Integer>> result = new ArrayList<>();
+        int count = 0;
+
+        for (Rent m : rentedMovies) {
+            if (count == 5) {
+                break;
+            }
+
+            result.add(Arrays.asList(m.shop, m.movie));
+
+            count ++;
+        }
+
+        return result;
+    }
 }
+
+/**
+ * Your MovieRentingSystem object will be instantiated and called as such:
+ * MovieRentingSystem obj = new MovieRentingSystem(n, entries);
+ * List<Integer> param_1 = obj.search(movie);
+ * obj.rent(shop,movie);
+ * obj.drop(shop,movie);
+ * List<List<Integer>> param_4 = obj.report();
+ */
