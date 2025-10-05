@@ -1,43 +1,41 @@
 class Solution {
     public List<List<Integer>> pacificAtlantic(int[][] heights) {
-        if(heights==null || heights.length == 0)return new ArrayList<>();
+        int rows = heights.length;
+        int cols = heights[0].length;
 
-        int row = heights.length;
-        int col = heights[0].length;
+        List<List<Integer>> result = new ArrayList<>();
 
-        boolean[][] pacific = new boolean[row][col];
-        boolean[][] atlantic = new boolean[row][col];
+        int[][] directions = {{1, 0}, {0, 1}, {-1,0}, {0,-1}};
+        boolean[][] pacific = new boolean[rows][cols];
+        boolean[][] atlantic = new boolean[rows][cols];
 
-        for(int i = 0; i < row; i++){
-            dfs(i, 0, heights, pacific);
-            dfs(i, col-1, heights, atlantic);
+        for(int i = 0; i < rows; i++){
+            dfs(i, 0, heights, pacific, rows, cols, directions);
+            dfs(i, cols-1, heights, atlantic, rows, cols, directions);
         }
-        for(int i = 0; i < col; i++){
-            dfs(0, i, heights, pacific);
-            dfs(row-1, i, heights, atlantic);
+        for(int j = 0; j < cols; j++){
+            dfs(0, j, heights, pacific, rows, cols, directions);
+            dfs(rows-1, j, heights, atlantic, rows, cols, directions);
         }
-        List<List<Integer>> res = new ArrayList<>();
-        for(int i = 0; i < row; i++){
-            for(int j = 0; j < col; j++){
-                if(pacific[i][j] && atlantic[i][j]){
-                    res.add(List.of(i,j));
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                if(pacific[i][j]==true && atlantic[i][j]==true){
+                    result.add(Arrays.asList(i, j));
                 }
             }
         }
-        return res;
-
+        return result;
     }
-    private void dfs(int row, int col, int[][]heights, boolean[][]bool){
-        bool[row][col] = true;
-        int[][]directions = {{1,0},{-1,0},{0,1},{0,-1}};
-
-        for(int[] dir :directions){
-            int newRow = row + dir[0];
-            int newCol = col + dir[1];
-            if(newRow<0 || newCol < 0 || newRow>=heights.length || newCol >= heights[0].length)continue;
-            if(bool[newRow][newCol])continue;
-            if(heights[newRow][newCol]<heights[row][col])continue;
-            dfs(newRow, newCol, heights, bool);
+    private void dfs(int i, int j, int[][]heights, boolean[][]visited, int rows, int cols, int[][]directions){
+        visited[i][j] = true;
+        int newX = 0;
+        int newY = 0;
+        for(int[] dir : directions){
+            newX = dir[0] + i;
+            newY = dir[1] + j;
+            if(newY>=0 && newX >=0 && newY < cols && newX < rows && visited[newX][newY]!=true && (heights[newX][newY]>=heights[i][j])){
+                dfs(newX, newY, heights, visited, rows, cols, directions);
+            }
         }
     }
 }
