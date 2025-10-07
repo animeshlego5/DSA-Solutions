@@ -11,7 +11,7 @@ class Solution {
             } else {
                 ans[i] = -1;
                 if (mp.containsKey(rains[i])) {
-                    Integer it = st.ceiling(mp.get(rains[i]));
+                    Integer it = st.higher(mp.get(rains[i]));
                     if (it == null) {
                         return new int[0];
                     }
