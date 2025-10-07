@@ -1,33 +1,26 @@
 class Solution {
-    public int[] avoidFlood(int[] rains) {
-        int n = rains.length;
-        int[] result = new int[n];
-        List<Integer> dries = new ArrayList<>();
-        Map<Integer, Integer> map = new HashMap<>();
 
-        for(int i = 0; i < n; i++){
-            if(rains[i]==0){
-                dries.add(i);
-                result[i] = 1;
+    public int[] avoidFlood(int[] rains) {
+        int[] ans = new int[rains.length];
+        Arrays.fill(ans, 1);
+        TreeSet<Integer> st = new TreeSet<Integer>();
+        Map<Integer, Integer> mp = new HashMap<Integer, Integer>();
+        for (int i = 0; i < rains.length; ++i) {
+            if (rains[i] == 0) {
+                st.add(i);
             } else {
-                if(map.containsKey(rains[i])){
-                    int lastFilled = map.get(rains[i]);
-                    int index = -1;
-                    for(int j = 0; j < dries.size(); j++){
-                        if(dries.get(j)>map.get(rains[i])){
-                            index = dries.get(j);
-                            dries.remove(j);
-                            break;
-                        }
+                ans[i] = -1;
+                if (mp.containsKey(rains[i])) {
+                    Integer it = st.ceiling(mp.get(rains[i]));
+                    if (it == null) {
+                        return new int[0];
                     }
-                    if(index == -1)return new int[0];
-                    result[index] = rains[i];
+                    ans[it] = rains[i];
+                    st.remove(it);
                 }
-                map.put(rains[i], i);
-                result[i] = -1;
+                mp.put(rains[i], i);
             }
-            
         }
-        return result;
+        return ans;
     }
 }
