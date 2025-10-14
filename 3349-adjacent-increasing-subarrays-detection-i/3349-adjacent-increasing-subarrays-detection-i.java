@@ -18,13 +18,16 @@ class Solution {
             }
             int j = secondStart;
             boolean second = true;
-            while(j + 1 < secondEnd + 1){
-                if(nums.get(j)>=nums.get(j+1)){
-                    second = false;
-                    break;
+            if(first){
+                while(j + 1 < secondEnd + 1){
+                    if(nums.get(j)>=nums.get(j+1)){
+                        second = false;
+                        break;
+                    }
+                    j++;
                 }
-                j++;
             }
+            
             firstStart++;
             firstEnd++;
             secondStart++;
