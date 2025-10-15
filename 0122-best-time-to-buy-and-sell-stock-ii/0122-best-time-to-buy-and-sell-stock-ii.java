@@ -9,22 +9,17 @@ class Solution {
         //     dp.add(row);
         // }
 
-        int[][] dp = new int[n+1][2];
+        int[] ahead = new int[2];
+        int[] cur = new int[2];
         
         int profit = 0;
         for(int i = n - 1; i >= 0; i--){
-            
-            
-            dp[i][0] = Math.max(prices[i] + dp[i+1][1], 0 + dp[i+1][0]);
-            
-            
-           
-            
-            dp[i][1] = Math.max(-prices[i]+dp[i+1][0], 0 + dp[i+1][1]);
-            
-            
+            cur[0] = Math.max(prices[i] + ahead[1], 0 + ahead[0]);
+            cur[1] = Math.max(-prices[i] + ahead[0], 0 + ahead[1]); 
+            ahead[0] = cur[0];
+            ahead[1] = cur[1];         
         }
-        return dp[0][1]; // Start with the option to buy
+        return cur[1]; // Start with the option to buy
     }
 
     // private int helper(int[] prices, int i, int buy, List<List<Integer>> dp, int n) {
