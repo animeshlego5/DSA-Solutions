@@ -1,23 +1,22 @@
 class Solution {
     public int maxFrequency(int[] nums, int k, int numOperations) {
-        Map<Long, Long> arrMap = new TreeMap<>();
-        Map<Long, Long> freq = new HashMap<>();
-        int n = nums.length;
-        for(int i = 0;i < n; i++) {
-            freq.put((long)nums[i], freq.getOrDefault((long)nums[i], 0L) + 1);
-            long left = Math.max(0, nums[i] - k);
-            arrMap.put(left, arrMap.getOrDefault(left, 0L) + 1);
-            long right = nums[i] + k + 1;
-            arrMap.put(right, arrMap.getOrDefault(right, 0L) - 1);
-            arrMap.put((long)nums[i], arrMap.getOrDefault((long)nums[i], 0L));
+        Map<Integer, Integer> freq = new HashMap<>();
+        Map<Integer, Integer> arrMap = new TreeMap<>(); //to keep it sorted
+        for(int i = 0; i < nums.length; i++){
+            freq.put(nums[i], freq.getOrDefault(nums[i], 0)+1);
+            int left = Math.max(0, nums[i] - k);
+            arrMap.put(left, arrMap.getOrDefault(left, 0)+1);
+            int right = nums[i] + k + 1;
+            arrMap.put(right, arrMap.getOrDefault(right, 0)-1);
+            arrMap.put(nums[i], arrMap.getOrDefault(nums[i], 0));
         }
-        long max = 1;
-        long sweep = 0;
-        for(Map.Entry<Long, Long> entry : arrMap.entrySet()) {
+        int max = 1;
+        int sweep = 0;
+        for(Map.Entry<Integer, Integer> entry : arrMap.entrySet()){
             sweep += entry.getValue();
-            long fre = sweep - freq.getOrDefault(entry.getKey(), 0L);
-            max = Math.max(max, Math.min(fre, numOperations) + freq.getOrDefault(entry.getKey(), 0L));
+            int frequency = sweep - freq.getOrDefault(entry.getKey(), 0);
+            max = Math.max(max, Math.min(frequency, numOperations) + freq.getOrDefault(entry.getKey(), 0));
         }
-        return (int)max;
+        return max;
     }
 }
