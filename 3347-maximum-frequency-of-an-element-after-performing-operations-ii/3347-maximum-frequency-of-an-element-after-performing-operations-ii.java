@@ -1,22 +1,39 @@
 class Solution {
-    public int maxFrequency(int[] nums, int k, int numOperations) {
-        Map<Integer, Integer> freq = new HashMap<>();
-        Map<Integer, Integer> arrMap = new TreeMap<>(); //to keep it sorted
-        for(int i = 0; i < nums.length; i++){
-            freq.put(nums[i], freq.getOrDefault(nums[i], 0)+1);
-            int left = Math.max(0, nums[i] - k);
-            arrMap.put(left, arrMap.getOrDefault(left, 0)+1);
-            int right = nums[i] + k + 1;
-            arrMap.put(right, arrMap.getOrDefault(right, 0)-1);
-            arrMap.put(nums[i], arrMap.getOrDefault(nums[i], 0));
+    public int maxFrequency(int[] nums, int k, int nos) {
+        Arrays.sort(nums);
+        return Math.max(helper1(nums , k , nos) , helper2(nums , k , nos));
+    }
+
+    private int helper1(int[] nums , int k , int nos){
+        int n = nums.length , res = 0;
+        int l = 0 , r = 0 , c = 0;
+        while(r < n){
+            c++;
+            while(nums[l] < nums[r] - k - k && l++ != r && c-- != 0);
+            res = Math.max(res , Math.min(c , nos));
+            r++;
         }
-        int max = 1;
-        int sweep = 0;
-        for(Map.Entry<Integer, Integer> entry : arrMap.entrySet()){
-            sweep += entry.getValue();
-            int frequency = sweep - freq.getOrDefault(entry.getKey(), 0);
-            max = Math.max(max, Math.min(frequency, numOperations) + freq.getOrDefault(entry.getKey(), 0));
+        return res;
+    }
+
+    private int helper2(int[] nums , int  k , int nos){
+        int l = 0 , r = 0 , c = 0 , n = nums.length , res = 0;
+        int last = -1 , wind = 0;
+        for(int num : nums){
+            if(last != num){
+                last = num;
+                c = 1;
+            } else c++;
+            while(r < n && nums[r] - k <= num) {
+                r++;
+                wind++;
+            }
+            while(nums[l] < num - k){
+                wind--;
+                l++;
+            }
+            res = Math.max(res , c + Math.min(wind - c , nos));
         }
-        return max;
+        return res;
     }
 }
