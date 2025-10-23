@@ -1,38 +1,36 @@
 class Solution {
-    public int maxFrequency(int[] nums, int k, int nos) {
+    public int maxFrequency(int[] nums, int k, int ops) {
+        int res = 0;
         Arrays.sort(nums);
-        return Math.max(helper1(nums , k , nos) , helper2(nums , k , nos));
-    }
-
-    private int helper1(int[] nums , int k , int nos){
-        int n = nums.length , res = 0;
-        int l = 0 , r = 0 , c = 0;
-        while(r < n){
-            c++;
-            while(nums[l] < nums[r] - k - k && l++ != r && c-- != 0);
-            res = Math.max(res , Math.min(c , nos));
-            r++;
+        int left = 0;
+        int right = 0;
+        int n = nums.length;
+        int i = 0;
+        // case 1, num is in the arr
+        while (i < n) {
+            int val = nums[i];
+            int same = 0;
+            while (i < n && nums[i] == val) {
+                same++;
+                i++;
+            }
+            while (right < n && nums[right] <= val + k) {
+                right++;
+            }
+            while (left < n && nums[left] < val - k) {
+                left++;
+            }
+            res = Math.max(res, Math.min(same + ops, right - left));
         }
-        return res;
-    }
-
-    private int helper2(int[] nums , int  k , int nos){
-        int l = 0 , r = 0 , c = 0 , n = nums.length , res = 0;
-        int last = -1 , wind = 0;
-        for(int num : nums){
-            if(last != num){
-                last = num;
-                c = 1;
-            } else c++;
-            while(r < n && nums[r] - k <= num) {
-                r++;
-                wind++;
+        // case 2, num is not in the arr
+        left = 0;
+        right = 0;
+        while (right < n) {
+            while (right < n && (long) nums[left] + k + k >= nums[right]) {
+                right++;
             }
-            while(nums[l] < num - k){
-                wind--;
-                l++;
-            }
-            res = Math.max(res , c + Math.min(wind - c , nos));
+            res = Math.max(res, Math.min(right - left, ops));
+            left++;
         }
         return res;
     }
